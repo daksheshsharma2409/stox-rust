@@ -22,6 +22,7 @@ use crate::{
         security_headers::security_headers_middleware,
     },
     observability::metrics::{init_metrics, metrics_handler},
+    routes::api_v1_router,
     state::AppState,
 };
 
@@ -59,6 +60,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/metrics", get(metrics_handler))
+        .nest("/api/v1", api_v1_router())
         .layer(axum::middleware::from_fn(security_headers_middleware))
         .layer(axum::middleware::from_fn(request_context_middleware))
         .layer(cors)
