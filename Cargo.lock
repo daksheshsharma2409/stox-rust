@@ -2413,6 +2413,7 @@ dependencies = [
  "chrono",
  "dotenvy",
  "futures",
+ "hex",
  "jsonwebtoken",
  "metrics",
  "metrics-exporter-prometheus",
