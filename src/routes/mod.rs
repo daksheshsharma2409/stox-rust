@@ -1,7 +1,9 @@
 pub mod achievement_routes;
+pub mod admin_routes;
 pub mod alert_routes;
 pub mod auth_routes;
 pub mod copy_trading_routes;
+pub mod health_routes;
 pub mod leaderboard_routes;
 pub mod league_routes;
 pub mod market_routes;
@@ -19,6 +21,7 @@ use crate::state::AppState;
 
 pub fn api_v1_router() -> Router<AppState> {
     Router::new()
+        .nest("/health", health_routes::routes())
         .nest("/auth", auth_routes::routes())
         .nest("/users", user_routes::routes())
         .nest("/portfolios", portfolio_routes::routes())
@@ -34,4 +37,5 @@ pub fn api_v1_router() -> Router<AppState> {
         .nest("/sentiment", sentiment_routes::routes())
         .nest("/preferences", preference_routes::routes())
         .nest("/notifications", notification_routes::routes())
+        .nest("/admin", admin_routes::routes())
 }

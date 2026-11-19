@@ -63,6 +63,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let state = AppState::new(pool, config.clone(), redis_client);
 
+    // Start background workers
+    workers::start_background_workers(state.clone());
+
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
@@ -71,6 +74,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/metrics", get(metrics_handler))
+        .nest("/health", routes::health_routes::routes())
+        .merge(realtime::websocket::routes())
         .nest("/api/v1", api_v1_router())
         .layer(axum::middleware::from_fn(security_headers_middleware))
         .layer(axum::middleware::from_fn(request_context_middleware))

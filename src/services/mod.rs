@@ -1,4 +1,5 @@
 pub mod achievement_service;
+pub mod admin_service;
 pub mod alert_service;
 pub mod auth_service;
 pub mod competition_service;
