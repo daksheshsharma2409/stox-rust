@@ -50,7 +50,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     tracing::info!("Connected to PostgreSQL database");
 
-    let state = AppState::new(pool, config.clone());
+    let redis_client = match redis::Client::open(config.redis_url.clone()) {
+        Ok(client) => {
+            tracing::info!("Initialized Redis client for {}", config.redis_url);
+            Some(client)
+        }
+        Err(err) => {
+            tracing::warn!("Failed to initialize Redis client: {:?}", err);
+            None
+        }
+    };
+
+    let state = AppState::new(pool, config.clone(), redis_client);
 
     let cors = CorsLayer::new()
         .allow_origin(Any)

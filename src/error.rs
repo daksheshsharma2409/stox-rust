@@ -102,6 +102,14 @@ impl AppError {
             None,
         )
     }
+
+    pub fn market_error(status_code: StatusCode, code: impl Into<String>, message: impl Into<String>) -> Self {
+        Self::new(status_code, code, message, None)
+    }
+
+    pub fn validation_error(message: impl Into<String>) -> Self {
+        Self::new(StatusCode::BAD_REQUEST, "VALIDATION_ERROR", message, None)
+    }
 }
 
 impl std::fmt::Display for AppError {

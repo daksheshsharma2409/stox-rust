@@ -52,12 +52,13 @@ pub struct AppState {
     pub pool: PgPool,
     pub config: Arc<AppConfig>,
     pub http_client: reqwest::Client,
+    pub redis_client: Option<redis::Client>,
     pub rate_limiter: Arc<RateLimiter>,
     pub tx_realtime: broadcast::Sender<RealtimeMessage>,
 }
 
 impl AppState {
-    pub fn new(pool: PgPool, config: Arc<AppConfig>) -> Self {
+    pub fn new(pool: PgPool, config: Arc<AppConfig>, redis_client: Option<redis::Client>) -> Self {
         let (tx_realtime, _) = broadcast::channel(1024);
         let http_client = reqwest::Client::builder()
             .timeout(std::time::Duration::from_millis(5000))
@@ -68,6 +69,7 @@ impl AppState {
             pool,
             config,
             http_client,
+            redis_client,
             rate_limiter: Arc::new(RateLimiter::new()),
             tx_realtime,
         }
